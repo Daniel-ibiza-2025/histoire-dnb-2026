@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Histoire DNB 2026</title>
+<style>
+  :root {
+    --bg: #0f0c29;
+    --card: #1a1a3e;
+    --accent1: #a855f7;
+    --accent2: #ec4899;
+    --accent3: #06b6d4;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --success: #22c55e;
+    --error: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', sans-serif; min-height: 100vh; }
+  
+  /* NAV */
+  nav { display: flex; gap: 8px; padding: 16px; background: rgba(255,255,255,0.05); flex-wrap: wrap; align-items: center; }
+  nav h1 { font-size: 1.1rem; background: linear-gradient(90deg, var(--accent1), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-right: 12px; flex: 1; min-width: 180px; }
+  .tab { padding: 8px 16px; border-radius: 20px; border: none; cursor: pointer; font-size: 0.85rem; font-weight: 600; background: rgba(255,255,255,0.08); color: var(--muted); transition: all 0.2s; }
+  .tab.active { background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: white; }
+  
+  /* SECTIONS */
+  .section { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding: 10px 0; }
+  .timeline::before { content:''; position:absolute; left:20px; top:0; bottom:0; width:3px; background: linear-gradient(to bottom, var(--accent1), var(--accent2), var(--accent3)); border-radius:3px; }
+  .t-item { position: relative; padding: 0 0 24px 56px; cursor: pointer; }
+  .t-dot { position:absolute; left:10px; top:4px; width:22px; height:22px; border-radius:50%; border:3px solid var(--accent1); background: var(--bg); transition:all 0.2s; display:flex; align-items:center; justify-content:center; font-size:0.5rem; }
+  .t-item:hover .t-dot { background: var(--accent1); transform:scale(1.2); }
+  .t-date { font-size:0.75rem; color: var(--accent3); font-weight:700; letter-spacing:1px; margin-bottom:2px; }
+  .t-title { font-size:0.95rem; font-weight:600; }
+  .t-detail { display:none; margin-top:8px; padding:10px 14px; background:rgba(168,85,247,0.1); border-left:3px solid var(--accent1); border-radius:4px; font-size:0.85rem; color:var(--muted); line-height:1.6; }
+  .t-item.open .t-detail { display:block; }
+  .t-theme { display:inline-block; font-size:0.7rem; padding:2px 8px; border-radius:10px; margin-bottom:4px; font-weight:600; }
+
+  .theme-ww1 { background:rgba(239,68,68,0.2); color:#fca5a5; }
+  .theme-tota { background:rgba(234,179,8,0.2); color:#fde68a; }
+  .theme-ww2 { background:rgba(249,115,22,0.2); color:#fdba74; }
+  .theme-gf { background:rgba(6,182,212,0.2); color:#67e8f9; }
+  .theme-deco { background:rgba(34,197,94,0.2); color:#86efac; }
+  .theme-5r { background:rgba(168,85,247,0.2); color:#d8b4fe; }
+  .theme-eu { background:rgba(236,72,153,0.2); color:#f9a8d4; }
+
+  /* FICHES */
+  .fiches-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:16px; }
+  .fiche { background:var(--card); border-radius:16px; padding:20px; border:1px solid rgba(255,255,255,0.08); cursor:pointer; transition:transform 0.2s, box-shadow 0.2s; }
+  .fiche:hover { transform:translateY(-3px); box-shadow:0 8px 30px rgba(168,85,247,0.2); }
+  .fiche h3 { font-size:1rem; margin-bottom:12px; }
+  .fiche-dates { margin-bottom:10px; }
+  .fiche-dates table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+  .fiche-dates td { padding:4px 6px; border-bottom:1px solid rgba(255,255,255,0.06); }
+  .fiche-dates td:first-child { color:var(--accent3); font-weight:700; width:80px; }
+  .fiche-retenir { margin-top:10px; }
+  .fiche-retenir p { font-size:0.8rem; font-weight:600; color:var(--accent1); margin-bottom:4px; }
+  .fiche-retenir ul { font-size:0.78rem; color:var(--muted); padding-left:14px; line-height:1.7; }
+  .fiche-perso { margin-top:8px; font-size:0.78rem; color:var(--accent2); }
+  .fiche-perso span { font-weight:600; color:var(--muted); }
+
+  /* QUIZ */
+  .quiz-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:8px; }
+  .quiz-score { font-size:0.9rem; color:var(--muted); }
+  .quiz-score b { color:var(--accent1); font-size:1.1rem; }
+  .progress-bar { height:6px; background:rgba(255,255,255,0.1); border-radius:3px; margin-bottom:24px; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--accent1),var(--accent2)); border-radius:3px; transition:width 0.4s; }
+  .q-box { background:var(--card); border-radius:16px; padding:24px; margin-bottom:16px; }
+  .q-theme-tag { font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:10px; display:inline-block; margin-bottom:12px; }
+  .q-text { font-size:1.05rem; font-weight:600; margin-bottom:18px; line-height:1.5; }
+  .q-options { display:grid; gap:10px; }
+  .q-opt { padding:12px 16px; background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1); border-radius:10px; cursor:pointer; font-size:0.9rem; transition:all 0.2s; text-align:left; color:var(--text); }
+  .q-opt:hover:not(:disabled) { border-color:var(--accent1); background:rgba(168,85,247,0.1); }
+  .q-opt.correct { border-color:var(--success); background:rgba(34,197,94,0.15); }
+  .q-opt.wrong { border-color:var(--error); background:rgba(239,68,68,0.15); }
+  .q-opt:disabled { cursor:default; }
+  .q-explanation { margin-top:12px; padding:10px 14px; background:rgba(6,182,212,0.1); border-left:3px solid var(--accent3); border-radius:4px; font-size:0.83rem; color:var(--muted); display:none; line-height:1.6; }
+  .q-explanation.show { display:block; }
+  .btn { padding:10px 24px; border-radius:20px; border:none; cursor:pointer; font-weight:700; font-size:0.9rem; transition:all 0.2s; }
+  .btn-primary { background:linear-gradient(135deg,var(--accent1),var(--accent2)); color:white; }
+  .btn-primary:hover { opacity:0.85; transform:translateY(-1px); }
+  .btn-ghost { background:rgba(255,255,255,0.07); color:var(--text); }
+  .quiz-nav { display:flex; gap:10px; margin-top:16px; justify-content:flex-end; flex-wrap:wrap; }
+  .quiz-result { text-align:center; padding:40px 20px; }
+  .quiz-result .big-score { font-size:4rem; font-weight:900; background:linear-gradient(135deg,var(--accent1),var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .quiz-result p { color:var(--muted); margin:8px 0 24px; font-size:1rem; }
+  .stars { font-size:2rem; margin-bottom:12px; }
+
+  /* DATES 10 */
+  .dates10 { display:grid; gap:10px; }
+  .d-item { display:flex; align-items:center; gap:16px; background:var(--card); border-radius:12px; padding:14px 18px; border:1px solid rgba(255,255,255,0.07); }
+  .d-year { font-size:1.3rem; font-weight:900; color:var(--accent1); min-width:70px; }
+  .d-desc { font-size:0.9rem; }
+
+  @media(max-width:480px){
+    nav h1 { font-size:0.95rem; }
+    .tab { padding:6px 12px; font-size:0.78rem; }
+    .fiche { padding:14px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <h1>📚 Histoire DNB 2026</h1>
+  <button class="tab active" onclick="show('timeline')">🕐 Frise</button>
+  <button class="tab" onclick="show('fiches')">📋 Fiches</button>
+  <button class="tab" onclick="show('quiz')">🎯 Quiz</button>
+  <button class="tab" onclick="show('dates10')">⭐ Les 10 dates</button>
+</nav>
+
+<!-- TIMELINE -->
+<div id="timeline" class="section active">
+  <h2 style="margin-bottom:20px;font-size:1.1rem;color:var(--muted)">Clique sur un événement pour en savoir plus</h2>
+  <div class="timeline" id="tl"></div>
+</div>
+
+<!-- FICHES -->
+<div id="fiches" class="section">
+  <h2 style="margin-bottom:20px;font-size:1.1rem;color:var(--muted)">Révise par thème</h2>
+  <div class="fiches-grid" id="fichesGrid"></div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="section">
+  <div id="quizContent"></div>
+</div>
+
+<!-- 10 DATES -->
+<div id="dates10" class="section">
+  <h2 style="margin-bottom:20px;font-size:1.1rem;color:var(--muted)">Les 10 dates incontournables du Brevet</h2>
+  <div class="dates10" id="dates10Grid"></div>
+</div>
+
+<script>
+const themes = [
+  {
+    id:'ww1', label:'1ère Guerre mondiale', cls:'theme-ww1', emoji:'⚔️',
+    dates:[{y:'1914',e:'Début de la Première Guerre mondiale'},{y:'1916',e:'Bataille de Verdun'},{y:'11 nov. 1918',e:'Armistice, fin de la guerre'}],
+    retenir:['Guerre totale mobilisant soldats et civils','Conditions difficiles dans les tranchées','Génocide des Arméniens (1915-1916)'],
+    perso:['Georges Clemenceau','Jean Jaurès']
+  },
+  {
+    id:'tota', label:'Régimes totalitaires', cls:'theme-tota', emoji:'🔴',
+    dates:[{y:'1922',e:'Mussolini au pouvoir en Italie'},{y:'1929',e:'Crise économique mondiale'},{y:'1933',e:'Hitler chancelier d\'Allemagne'},{y:'1936',e:'Front populaire en France'}],
+    retenir:['Dictatures fondées sur la propagande et la terreur','Contrôle de la population','Culte du chef'],
+    perso:['Benito Mussolini','Adolf Hitler','Joseph Staline','Léon Blum']
+  },
+  {
+    id:'ww2', label:'2e Guerre mondiale', cls:'theme-ww2', emoji:'🕊️',
+    dates:[{y:'1939',e:'Début de la guerre'},{y:'18 juin 1940',e:'Appel du général de Gaulle'},{y:'1942',e:'Rafle du Vel d\'Hiv'},{y:'1944',e:'Débarquement de Normandie'},{y:'8 mai 1945',e:'Capitulation allemande'}],
+    retenir:['Guerre d\'anéantissement','Shoah : extermination des Juifs d\'Europe','Résistance et Collaboration en France'],
+    perso:['Charles de Gaulle','Philippe Pétain','Jean Moulin']
+  },
+  {
+    id:'gf', label:'Guerre froide', cls:'theme-gf', emoji:'🧊',
+    dates:[{y:'1947',e:'Début de la Guerre froide'},{y:'1948-49',e:'Blocus de Berlin'},{y:'1961',e:'Construction du mur de Berlin'},{y:'1989',e:'Chute du mur de Berlin'},{y:'1991',e:'Fin de l\'URSS'}],
+    retenir:['Opposition entre États-Unis et URSS','Monde bipolaire','Crises sans affrontement direct'],
+    perso:['Harry Truman','Mikhaïl Gorbatchev']
+  },
+  {
+    id:'deco', label:'Décolonisation', cls:'theme-deco', emoji:'🌍',
+    dates:[{y:'1947',e:'Indépendance de l\'Inde'},{y:'1954-1962',e:'Guerre d\'Algérie'},{y:'1962',e:'Indépendance de l\'Algérie'}],
+    retenir:['Les colonies deviennent indépendantes','Fin progressive des empires coloniaux européens'],
+    perso:['Mahatma Gandhi','Ahmed Ben Bella']
+  },
+  {
+    id:'5r', label:'Ve République', cls:'theme-5r', emoji:'🇫🇷',
+    dates:[{y:'1958',e:'Naissance de la Ve République'},{y:'1962',e:'Élection du président au suffrage universel direct'},{y:'1981',e:'Élection de François Mitterrand'}],
+    retenir:['Renforcement du pouvoir présidentiel','Alternance politique'],
+    perso:['Charles de Gaulle','François Mitterrand']
+  },
+  {
+    id:'eu', label:'Construction européenne', cls:'theme-eu', emoji:'🇪🇺',
+    dates:[{y:'1957',e:'Traité de Rome'},{y:'1992',e:'Traité de Maastricht'},{y:'2002',e:'Mise en circulation de l\'euro'}],
+    retenir:['Construction progressive de l\'Union européenne','Coopération économique puis politique'],
+    perso:['Robert Schuman','Jean Monnet']
+  }
+];
+
+const dates10 = [
+  {y:'1914', d:'Début de la Première Guerre mondiale'},
+  {y:'11 nov. 1918', d:'Armistice — fin de la guerre'},
+  {y:'1933', d:'Hitler au pouvoir en Allemagne'},
+  {y:'1939', d:'Début de la Seconde Guerre mondiale'},
+  {y:'18 juin 1940', d:'Appel du général de Gaulle'},
+  {y:'8 mai 1945', d:'Fin de la 2e Guerre mondiale en Europe'},
+  {y:'1947', d:'Début de la Guerre froide'},
+  {y:'1958', d:'Naissance de la Ve République'},
+  {y:'1989', d:'Chute du mur de Berlin'},
+  {y:'1992', d:'Traité de Maastricht'},
+];
+
+const questions = [
+  {t:'ww1',q:'En quelle année a débuté la Première Guerre mondiale ?',opts:['1912','1914','1916','1918'],ans:1,exp:'La Première Guerre mondiale a commencé en 1914, après l\'assassinat de l\'archiduc François-Ferdinand.'},
+  {t:'ww1',q:'Que s\'est-il passé le 11 novembre 1918 ?',opts:['Début de la guerre','Bataille de Verdun','Armistice, fin de la guerre','Traité de Versailles'],ans:2,exp:'Le 11 novembre 1918, l\'armistice est signé, mettant fin aux combats de la Première Guerre mondiale.'},
+  {t:'ww1',q:'Quel génocide a eu lieu pendant la Première Guerre mondiale ?',opts:['Génocide rwandais','Génocide des Arméniens','Shoah','Génocide cambodgien'],ans:1,exp:'Le génocide des Arméniens (1915-1916) fut perpétré par l\'Empire ottoman pendant la Première Guerre mondiale.'},
+  {t:'tota',q:'Quand Hitler est-il devenu chancelier d\'Allemagne ?',opts:['1929','1931','1933','1936'],ans:2,exp:'Adolf Hitler est nommé chancelier d\'Allemagne le 30 janvier 1933, marquant le début du régime nazi.'},
+  {t:'tota',q:'Qu\'est-ce qui caractérise les régimes totalitaires ?',opts:['Liberté de la presse','Propagande et terreur','Élections libres','Séparation des pouvoirs'],ans:1,exp:'Les régimes totalitaires se fondent sur la propagande, la terreur et le contrôle total de la population.'},
+  {t:'ww2',q:'Quel événement s\'est produit le 18 juin 1940 ?',opts:['Débarquement en Normandie','Capitulation allemande','Appel du général de Gaulle','Rafle du Vel d\'Hiv'],ans:2,exp:'Le 18 juin 1940, le général de Gaulle lance son célèbre appel depuis Londres pour continuer la résistance.'},
+  {t:'ww2',q:'Que désigne la Shoah ?',opts:['La résistance française','L\'extermination des Juifs d\'Europe','Le débarquement allié','Le régime de Vichy'],ans:1,exp:'La Shoah désigne le génocide des Juifs d\'Europe, planifié et exécuté par les nazis durant la Seconde Guerre mondiale.'},
+  {t:'ww2',q:'En quelle année a eu lieu le Débarquement de Normandie ?',opts:['1942','1943','1944','1945'],ans:2,exp:'Le Débarquement de Normandie (opération Overlord) a eu lieu le 6 juin 1944, marquant un tournant décisif.'},
+  {t:'gf',q:'La Guerre froide oppose principalement…',opts:['France et Allemagne','États-Unis et URSS','Royaume-Uni et Chine','OTAN et ONU'],ans:1,exp:'La Guerre froide (1947-1991) oppose les États-Unis (bloc occidental) à l\'URSS (bloc soviétique).'},
+  {t:'gf',q:'Quand le mur de Berlin est-il tombé ?',opts:['1985','1987','1989','1991'],ans:2,exp:'Le mur de Berlin est tombé le 9 novembre 1989, symbolisant la fin de la division de l\'Europe et la chute du bloc soviétique.'},
+  {t:'deco',q:'Quelle figure symbolise l\'indépendance de l\'Inde en 1947 ?',opts:['Nehru','Ben Bella','Mahatma Gandhi','Mandela'],ans:2,exp:'Mahatma Gandhi a mené la lutte pour l\'indépendance de l\'Inde par la non-violence. L\'indépendance fut obtenue en 1947.'},
+  {t:'deco',q:'La guerre d\'Algérie s\'est terminée en…',opts:['1956','1958','1960','1962'],ans:3,exp:'La guerre d\'Algérie (1954-1962) s\'est terminée avec les accords d\'Évian en 1962, aboutissant à l\'indépendance algérienne.'},
+  {t:'5r',q:'Quand naît la Ve République française ?',opts:['1946','1954','1958','1962'],ans:2,exp:'La Ve République est fondée en 1958 par le général de Gaulle, suite à la crise en Algérie qui a provoqué la chute de la IVe République.'},
+  {t:'eu',q:'Quel traité fonde la Communauté économique européenne en 1957 ?',opts:['Traité de Maastricht','Traité de Rome','Traité de Lisbonne','Traité de Paris'],ans:1,exp:'Le Traité de Rome (1957) fonde la CEE (Communauté Économique Européenne), première étape de la construction européenne.'},
+  {t:'eu',q:'En quelle année l\'euro est-il mis en circulation ?',opts:['1992','1999','2002','2004'],ans:2,exp:'L\'euro est mis en circulation le 1er janvier 2002 dans 12 pays européens, concrétisant l\'union monétaire prévue par Maastricht.'},
+];
+
+// --- TIMELINE ---
+function buildTimeline() {
+  const all = [];
+  themes.forEach(th => th.dates.forEach(d => all.push({...d, theme:th})));
+  const tl = document.getElementById('tl');
+  all.forEach((ev, i) => {
+    const div = document.createElement('div');
+    div.className = 't-item';
+    div.innerHTML = `<div class="t-dot"></div>
+      <span class="t-theme ${ev.theme.cls}">${ev.theme.emoji} ${ev.theme.label}</span>
+      <div class="t-date">${ev.y}</div>
+      <div class="t-title">${ev.e}</div>
+      <div class="t-detail">${ev.theme.retenir[0]}</div>`;
+    div.onclick = () => div.classList.toggle('open');
+    tl.appendChild(div);
+  });
+}
+
+// --- FICHES ---
+function buildFiches() {
+  const grid = document.getElementById('fichesGrid');
+  themes.forEach(th => {
+    const d = document.createElement('div');
+    d.className = 'fiche';
+    d.innerHTML = `<h3><span class="t-theme ${th.cls}">${th.emoji} ${th.label}</span></h3>
+      <div class="fiche-dates"><table>${th.dates.map(x=>`<tr><td>${x.y}</td><td>${x.e}</td></tr>`).join('')}</table></div>
+      <div class="fiche-retenir"><p>À retenir :</p><ul>${th.retenir.map(r=>`<li>${r}</li>`).join('')}</ul></div>
+      <div class="fiche-perso">👤 <span>Personnages :</span> ${th.perso.join(', ')}</div>`;
+    grid.appendChild(d);
+  });
+}
+
+// --- QUIZ ---
+let qState = { current:0, score:0, answered:[] };
+
+function buildQuiz() {
+  const qs = shuffle([...questions]);
+  qState = { qs, current:0, score:0, answered:new Array(qs.length).fill(null) };
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const c = document.getElementById('quizContent');
+  const {qs, current, score, answered} = qState;
+  if (current >= qs.length) { showResult(); return; }
+  const q = qs[current];
+  const th = themes.find(t=>t.id===q.t);
+  const pct = Math.round((current/qs.length)*100);
+  c.innerHTML = `
+    <div class="quiz-header">
+      <span style="color:var(--muted);font-size:0.85rem">Question ${current+1} / ${qs.length}</span>
+      <span class="quiz-score">Score : <b>${score}</b></span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-box">
+      <span class="q-theme-tag ${th.cls}">${th.emoji} ${th.label}</span>
+      <div class="q-text">${q.q}</div>
+      <div class="q-options">${q.opts.map((o,i)=>`<button class="q-opt" id="opt${i}" onclick="answer(${i})">${o}</button>`).join('')}</div>
+      <div class="q-explanation" id="expl">${q.exp}</div>
+    </div>
+    <div class="quiz-nav" id="qnav" style="display:none">
+      <button class="btn btn-primary" onclick="nextQ()">${current+1<qs.length?'Question suivante →':'Voir mon score 🎉'}</button>
+    </div>`;
+}
+
+function answer(i) {
+  const q = qState.qs[qState.current];
+  document.querySelectorAll('.q-opt').forEach(b=>b.disabled=true);
+  document.getElementById(`opt${i}`).classList.add(i===q.ans?'correct':'wrong');
+  if (i===q.ans) { document.getElementById(`opt${q.ans}`).classList.add('correct'); qState.score++; }
+  else { document.getElementById(`opt${q.ans}`).classList.add('correct'); }
+  document.getElementById('expl').classList.add('show');
+  document.getElementById('qnav').style.display='flex';
+}
+
+function nextQ() { qState.current++; renderQuestion(); }
+
+function showResult() {
+  const {score, qs} = qState;
+  const pct = Math.round((score/qs.length)*100);
+  const stars = pct>=80?'⭐⭐⭐':pct>=50?'⭐⭐':'⭐';
+  const msg = pct>=80?'Excellent travail, tu maîtrises le cours !':pct>=50?'Bon début, continue à réviser !':'Courage, relis tes fiches et réessaie !';
+  document.getElementById('quizContent').innerHTML = `
+    <div class="quiz-result">
+      <div class="stars">${stars}</div>
+      <div class="big-score">${score}/${qs.length}</div>
+      <p>${msg}</p>
+      <button class="btn btn-primary" onclick="buildQuiz()">🔄 Recommencer</button>
+    </div>`;
+}
+
+// --- 10 DATES ---
+function buildDates10() {
+  const g = document.getElementById('dates10Grid');
+  dates10.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'd-item';
+    el.innerHTML = `<div class="d-year">${d.y}</div><div class="d-desc">${d.d}</div>`;
+    g.appendChild(el);
+  });
+}
+
+function shuffle(a) { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a; }
+
+function show(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+buildTimeline();
+buildFiches();
+buildQuiz();
+buildDates10();
+</script>
+</body>
+</html>
